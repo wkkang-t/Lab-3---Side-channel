@@ -105,8 +105,11 @@ int main(int argc, char **argv) {
 
     for (int i =0; i<32; i++) {
         for (char k=0; 32<k<127; k++) {
+            if (demonstrate_signals() == 1) {
+                printf("We caught a page fault\n");
+                printf("%c\n", k);
+            }
             check_pass(k);
-            if (demonstrate_signals() == -1) printf("We caught a page fault\n");
         }
     }
 
