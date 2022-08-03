@@ -89,10 +89,10 @@ int main(int argc, char **argv) {
     // use signals to capture and continue from a faulting access
     // to protected memory.  You can remove this code after you understand it.
     // You will need to use signals in this manner to solve the assignment.
-    //
-    // if (demonstrate_signals() == 1) {
-    //     printf("We caught a page fault\n");
-    // }
+    
+    if (demonstrate_signals() == 1) {
+        printf("We caught a page fault\n");
+    }
 
     // set initial guess to zeros
     bzero(guess, sizeof(guess));
