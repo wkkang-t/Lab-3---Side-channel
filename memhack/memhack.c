@@ -90,9 +90,9 @@ int main(int argc, char **argv) {
     // to protected memory.  You can remove this code after you understand it.
     // You will need to use signals in this manner to solve the assignment.
     
-    if (demonstrate_signals() == 1) {
-        printf("We caught a page fault\n");
-    }
+    // if (demonstrate_signals() == 1) {
+    //     printf("We caught a page fault\n");
+    // }
 
     // set initial guess to zeros
     bzero(guess, sizeof(guess));
@@ -103,13 +103,15 @@ int main(int argc, char **argv) {
     //   password, each time trying all possible characters
     //
 
+    guess = page_start - 32;
     for (int i =0; i<32; i++) {
         for (char k=0; 32<k<127; k++) {
+            guess[31] = k;
             if (demonstrate_signals() == 1) {
                 printf("We caught a page fault\n");
                 printf("%c\n", k);
             }
-            check_pass(k);
+            check_pass(guess);
         }
     }
 
