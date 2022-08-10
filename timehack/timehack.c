@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
     long timer[94];
     // set guess to zeros
     bzero(guess, sizeof(guess));
-    //guess = "IsNotSecret\0";
+    
     //if(check_pass(guess)){hack_system(guess);}
     //
     // do the guessing (this is where your code goes)
@@ -98,8 +98,8 @@ int main(int argc, char **argv) {
         //printf("%d\t",timer[j]); 
     }
     //printf("%d\t",index);
-    for (int i =0; i <94;i++){printf("%d %c\t",timer[i],i+33);}
-    printf("\n");
+    //for (int i =0; i <94;i++){printf("%d %c\t",timer[i],i+33);}
+    //printf("\n");
     guess[e] = index+33;
     guess[e+1] = 0;
     if (check_pass(guess)){hack_system(guess);}
