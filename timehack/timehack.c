@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
     int index;
     for (j = 0;j<94; j++){
 	long x = timer[j];
-	if (z<x && j<20000){
+	if (z<x && x<20000){
 	    z=x;
 	    index = j;
 	}
